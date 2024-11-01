@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Datos desde Google Sheets</title>
+</head>
+<body>
+    <h1>Datos y Imágenes desde Google Sheets y Google Drive</h1>
+    
+    <div id="data-container"></div>
+
+    <script>
+        // Configura el ID de tu hoja de cálculo y tu API Key
+        const SHEET_ID = 'TU_SHEET_ID';
+        const API_KEY = 'TU_API_KEY';
+        const SHEET_NAME = 'NombreDeTuHoja'; // Asegúrate de que sea el nombre exacto de la hoja
+
+        // URL de la API de Google Sheets
+        const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vT0rlTiOl6iQ9pmGSLeDMBR7dADNDdNwPJR6DBKkP3kTtOIvcr4FHVIv-AQlpxPP5PKCwOgjOlSi0qm/pubhtml?gid=0&single=true`;
+
+        // Función para cargar datos desde Google Sheets
+        async function loadData() {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // Obtén las filas de datos
+                const rows = data.values;
+                if (rows.length > 0) {
+                    let html = "<table border='1'><tr>";
+
+                    // Agrega los encabezados
+                    rows[0].forEach(header => {
+                        html += `<th>${header}</th>`;
+                    });
+                    html += "</tr>";
+
+                    // Agrega cada fila de datos
+                    for (let i = 1; i < rows.length; i++) {
+                        html += "<tr>";
+                        rows[i].forEach(cell => {
+                            html += `<td>${cell}</td>`;
+                        });
+                        html += "</tr>";
+                    }
+
+                    html += "</table>";
+                    document.getElementById("data-container").innerHTML = html;
+                }
+            } catch (error) {
+                console.error("Error cargando los datos:", error);
+            }
+        }
+
+        // Llamada a la función para cargar los datos
+        loadData();
+    </script>
+</body>
+</html>
